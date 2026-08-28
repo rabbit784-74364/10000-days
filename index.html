@@ -998,8 +998,14 @@ function initBgCarousel(imageList) {
 
   if (imageList.length === 0) return;
 
-  // Directly use manifest URLs — no probing!
-  const images = imageList.map(f => f.startsWith('images/') ? f : `images/${f}`);
+  // Directly use manifest URLs — encode Chinese filenames
+  const images = imageList.map(f => {
+    const path = f.startsWith('images/') ? f : `images/${f}`;
+    // Split path and encode filename part for non-ASCII chars
+    const parts = path.split('/');
+    parts[parts.length - 1] = encodeURI(parts[parts.length - 1]);
+    return parts.join('/');
+  });
 
   let current = 0;
 
