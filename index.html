@@ -353,6 +353,56 @@ main {
 }
 
 /* ============================================================
+   MUSIC PLAYER
+   ============================================================ */
+.music-player {
+  position: fixed; bottom: 100px; right: 16px; z-index: 10;
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 18px;
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 99px; cursor: pointer;
+  transition: all 0.3s ease;
+  pointer-events: auto;
+}
+.music-player:hover { background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.25); }
+.music-player.playing { border-color: rgba(100,200,255,0.4); box-shadow: 0 0 20px rgba(100,180,255,0.15); }
+.music-icon {
+  width: 28px; height: 28px; font-size: 18px;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform 0.3s;
+}
+.music-player.playing .music-icon { animation: musicPulse 1.5s ease-in-out infinite; }
+@keyframes musicPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+.music-info { display: flex; flex-direction: column; min-width: 0; }
+.music-title {
+  font-size: 12px; color: rgba(255,255,255,0.9); font-weight: 500;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;
+}
+.music-hint {
+  font-size: 10px; color: rgba(255,255,255,0.4);
+  white-space: nowrap;
+}
+.music-note {
+  font-size: 11px; color: rgba(255,255,255,0.5);
+  animation: noteFloat 2s ease-in-out infinite;
+}
+@keyframes noteFloat {
+  0%, 100% { opacity: 0.4; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(-4px); }
+}
+.music-empty { display: none; }
+
+@media (max-width: 480px) {
+  .music-player { bottom: 85px; right: 8px; padding: 8px 14px; gap: 6px; }
+  .music-title { max-width: 100px; font-size: 11px; }
+}
+
+/* ============================================================
    RESPONSIVE
    ============================================================ */
 @media (max-width: 480px) {
@@ -412,6 +462,16 @@ main {
 </main>
 
 <p class="hint">✦ 点击任意位置 · 燃放烟花 ✦</p>
+
+<!-- Music Player -->
+<div class="music-player" id="musicPlayer" title="点击播放音乐">
+  <span class="music-icon">🎵</span>
+  <span class="music-info">
+    <span class="music-title" id="musicTitle">未添加音乐</span>
+    <span class="music-hint" id="musicHint">点击播放</span>
+  </span>
+  <span class="music-note" id="musicNote">♪</span>
+</div>
 
 <script>
 // ============================================================
@@ -783,64 +843,52 @@ console.log('%c🪐 10000 Days %c· %c1999.04.13 → 2026.08.29',
 console.log('%cHello, World! × 10000 🚀', 'color:#4d96ff;');
 
 // ============================================================
+// MANIFEST LOADER — Images + Music
+// ============================================================
+let manifestData = { images: [], music: [] };
+
+async function loadManifest() {
+  try {
+    const resp = await fetch('manifest.json');
+    if (resp.ok) manifestData = await resp.json();
+  } catch (e) {
+    manifestData = { images: [], music: [] };
+  }
+  initBgCarousel(manifestData.images || []);
+  initMusicPlayer(manifestData.music || []);
+}
+
+// ============================================================
 // BACKGROUND IMAGE CAROUSEL
 // ============================================================
-(function initBgCarousel() {
+function initBgCarousel(imageList) {
   const container = document.getElementById('bgCarousel');
-  // Supported image extensions
-  const exts = ['.jpg','.jpeg','.png','.webp','.gif','.bmp'];
-  const imageFiles = [];
-  // Try to load images from the images/ folder
-  // We'll probe common filenames, plus the user can add their own
-
-  // Probe images/img-1.jpg, images/img-2.jpg, etc.
-  function probeImages(prefix, count, ext) {
-    const found = [];
-    for (let i = 1; i <= count; i++) {
-      const url = `images/${prefix}${i}${ext}`;
-      found.push(url);
+  const toLoad = [...imageList];
+  if (toLoad.length === 0) {
+    for (let i = 1; i <= 20; i++) {
+      toLoad.push(`images/img-${i}.jpg`, `images/img-${i}.png`, `images/photo-${i}.jpg`, `images/pic-${i}.jpg`);
     }
-    return found;
   }
-
-  // Try multiple naming patterns
-  const candidates = [
-    ...probeImages('img-', 20, '.jpg'),
-    ...probeImages('img-', 20, '.png'),
-    ...probeImages('img-', 20, '.webp'),
-    ...probeImages('photo-', 20, '.jpg'),
-    ...probeImages('photo-', 20, '.png'),
-    ...probeImages('pic-', 20, '.jpg'),
-    ...probeImages('pic-', 20, '.png'),
-  ];
-
-  // Test each candidate
-  let loaded = 0;
   const validImages = [];
-
-  function testNext(index) {
-    if (index >= candidates.length) {
+  let idx = 0;
+  function testNext() {
+    if (idx >= toLoad.length) {
       if (validImages.length > 0) startCarousel(validImages);
       return;
     }
+    const src = toLoad[idx];
+    const url = src.startsWith('images/') ? src : `images/${src}`;
+    idx++;
     const img = new Image();
-    img.onload = function() {
-      validImages.push(candidates[index]);
-      testNext(index + 1);
-    };
-    img.onerror = function() {
-      testNext(index + 1);
-    };
-    img.src = candidates[index];
+    img.onload = function() { validImages.push(url); testNext(); };
+    img.onerror = function() { testNext(); };
+    img.src = url;
   }
-
-  testNext(0);
+  testNext();
 
   function startCarousel(images) {
     if (images.length === 0) return;
     let current = 0;
-
-    // Create slide elements
     images.forEach((src, i) => {
       const slide = document.createElement('div');
       slide.className = 'bg-slide';
@@ -848,9 +896,7 @@ console.log('%cHello, World! × 10000 🚀', 'color:#4d96ff;');
       if (i === 0) slide.classList.add('active');
       container.appendChild(slide);
     });
-
     const slides = container.querySelectorAll('.bg-slide');
-
     function nextSlide() {
       slides[current].classList.remove('active');
       slides[current].classList.add('exit');
@@ -858,13 +904,99 @@ console.log('%cHello, World! × 10000 🚀', 'color:#4d96ff;');
       slides[current].classList.remove('exit');
       slides[current].classList.add('active');
     }
-
-    // Rotate every 8 seconds
-    if (images.length > 1) {
-      setInterval(nextSlide, 8000);
-    }
+    if (images.length > 1) setInterval(nextSlide, 8000);
   }
-})();
+}
+
+// ============================================================
+// MUSIC PLAYER
+// ============================================================
+function initMusicPlayer(musicList) {
+  const playerEl = document.getElementById('musicPlayer');
+  const titleEl = document.getElementById('musicTitle');
+  const hintEl = document.getElementById('musicHint');
+  const iconEl = playerEl.querySelector('.music-icon');
+  const noteEl = document.getElementById('musicNote');
+
+  if (!musicList || musicList.length === 0) {
+    titleEl.textContent = '拖入 MP3 到 music/ 目录';
+    hintEl.textContent = '更新 manifest.json';
+    playerEl.style.opacity = '0.5';
+    playerEl.style.cursor = 'default';
+    return;
+  }
+
+  let currentTrack = 0;
+  let isPlaying = false;
+  const audio = new Audio();
+  audio.volume = 0.5;
+  const playlist = musicList.map(f => f.startsWith('music/') ? f : `music/${f}`);
+
+  function loadTrack(index) {
+    audio.src = playlist[index];
+    const name = musicList[index].replace(/^music\//, '').replace(/\.[^.]+$/, '');
+    titleEl.textContent = name.length > 18 ? name.slice(0, 16) + '…' : name;
+    audio.load();
+  }
+
+  function play() {
+    audio.play().then(() => {
+      isPlaying = true;
+      playerEl.classList.add('playing');
+      iconEl.textContent = '🎵';
+      hintEl.textContent = '正在播放';
+      noteEl.style.display = '';
+    }).catch(() => { hintEl.textContent = '点击播放'; });
+  }
+
+  function pause() {
+    audio.pause(); isPlaying = false;
+    playerEl.classList.remove('playing');
+    iconEl.textContent = '🎵'; hintEl.textContent = '已暂停';
+    noteEl.style.display = 'none';
+  }
+
+  playerEl.addEventListener('click', () => {
+    if (musicList.length === 0) return;
+    isPlaying ? pause() : play();
+  });
+
+  audio.addEventListener('ended', () => {
+    currentTrack = (currentTrack + 1) % playlist.length;
+    loadTrack(currentTrack); play();
+  });
+
+  audio.addEventListener('error', () => {
+    hintEl.textContent = '加载失败，下一首';
+    setTimeout(() => { currentTrack = (currentTrack + 1) % playlist.length; loadTrack(currentTrack); play(); }, 2000);
+  });
+
+  playerEl.addEventListener('dblclick', (e) => {
+    e.preventDefault();
+    currentTrack = (currentTrack + 1) % playlist.length;
+    loadTrack(currentTrack); if (isPlaying) play();
+  });
+
+  loadTrack(0);
+  hintEl.textContent = '点击播放';
+
+  // Auto-play on first user interaction
+  let started = false;
+  function tryStart() {
+    if (started || musicList.length === 0) return;
+    audio.play().then(() => {
+      started = true; isPlaying = true;
+      playerEl.classList.add('playing');
+      iconEl.textContent = '🎵'; hintEl.textContent = '正在播放';
+      noteEl.style.display = '';
+    }).catch(() => {});
+  }
+  document.addEventListener('click', tryStart, { once: false });
+  document.addEventListener('touchstart', tryStart, { once: false });
+}
+
+// Kick off
+loadManifest();
 
 // ============================================================
 // METEOR SHOWER — Shooting Stars
