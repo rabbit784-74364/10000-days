@@ -143,13 +143,14 @@ main {
 .number-wrap {
   position: relative;
   pointer-events: none;
+  transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 10;
 }
 .number {
   font-size: clamp(80px, 18vw, 200px);
   font-weight: 900;
   line-height: 1;
   letter-spacing: -0.03em;
-  /* Rainbow gradient text */
   background: linear-gradient(
     135deg,
     #ff6b6b 0%, #ffd93d 20%, #6bcb77 40%,
@@ -159,9 +160,26 @@ main {
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  /* Breathing + floating animation */
   animation: breatheFloat 4s ease-in-out infinite, gradientShift 8s linear infinite;
   filter: drop-shadow(0 0 30px rgba(180, 100, 255, 0.4));
+  transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Shrunk state — moves to top-right */
+.number-wrap.shrunk {
+  position: fixed;
+  top: 18px; right: 20px;
+  transform: none;
+  z-index: 10;
+}
+.number-wrap.shrunk .number {
+  font-size: 32px;
+  animation: none;
+  filter: drop-shadow(0 0 12px rgba(180, 100, 255, 0.5));
+}
+@media (max-width: 480px) {
+  .number-wrap.shrunk { top: 12px; right: 12px; }
+  .number-wrap.shrunk .number { font-size: 24px; }
 }
 
 @keyframes breatheFloat {
@@ -184,7 +202,9 @@ main {
   margin-top: -0.2em;
   letter-spacing: 0.3em;
   pointer-events: none;
+  transition: opacity 0.8s ease;
 }
+.subtitle.hidden { opacity: 0; pointer-events: none; }
 
 /* Typewriter */
 .typewriter-wrap {
@@ -192,7 +212,9 @@ main {
   min-height: 2.5rem;
   display: flex; align-items: center; justify-content: center;
   pointer-events: none;
+  transition: opacity 0.8s ease;
 }
+.typewriter-wrap.hidden { opacity: 0; pointer-events: none; }
 .typewriter {
   font-size: clamp(14px, 3vw, 22px);
   color: rgba(255,255,255,0.85);
@@ -211,7 +233,9 @@ main {
   display: flex; flex-wrap: wrap; gap: 0.6rem;
   justify-content: center; margin-top: 1.8rem;
   pointer-events: none;
+  transition: opacity 0.8s ease;
 }
+.tags.hidden { opacity: 0; pointer-events: none; }
 .tag {
   display: inline-block;
   padding: 0.4rem 1rem;
@@ -224,6 +248,48 @@ main {
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255,255,255,0.12);
   white-space: nowrap;
+}
+
+/* ============================================================
+   SLIDESHOW STAGE — Center image carousel after 3s
+   ============================================================ */
+.slideshow-stage {
+  position: fixed; inset: 0; z-index: 2;
+  opacity: 0; pointer-events: none;
+  transition: opacity 1s ease;
+  display: flex; align-items: center; justify-content: center;
+}
+.slideshow-stage.active { opacity: 1; }
+.slideshow-stage .slide-img {
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center;
+  opacity: 0; transition: opacity 1.5s ease;
+}
+.slideshow-stage .slide-img.active { opacity: 1; }
+/* Dark overlay for readability */
+.slideshow-stage::after {
+  content: ''; position: absolute; inset: 0;
+  background: rgba(5, 5, 16, 0.45);
+  pointer-events: none;
+}
+/* Typewriter overlay on slideshow */
+.slideshow-typewriter {
+  position: relative; z-index: 3;
+  font-size: clamp(15px, 3.5vw, 24px);
+  color: rgba(255,255,255,0.9);
+  font-weight: 300;
+  text-align: center;
+  padding: 0 2rem;
+  text-shadow: 0 0 20px rgba(0,0,0,0.6);
+  min-height: 2em;
+  display: flex; align-items: center; justify-content: center;
+}
+.slideshow-typewriter .cursor {
+  display: inline-block; width: 2px; height: 1.2em;
+  background: rgba(255,255,255,0.7);
+  margin-left: 4px;
+  animation: cursorBlink 0.8s step-end infinite;
+  vertical-align: middle;
 }
 
 /* Bottom hint */
@@ -334,9 +400,37 @@ main {
    ============================================================ */
 
 /* ============================================================
-   MUSIC PLAYER — Hidden, auto-play only
+   MUSIC PLAYER — Icon-only button
    ============================================================ */
-.music-player { display: none; }
+.music-btn {
+  position: fixed; bottom: 28px; left: 20px; z-index: 10;
+  width: 44px; height: 44px; border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.15);
+  cursor: pointer; pointer-events: auto;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; transition: all 0.3s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.music-btn:hover { background: rgba(255,255,255,0.16); border-color: rgba(255,255,255,0.3); }
+.music-btn.playing {
+  border-color: rgba(100,200,255,0.5);
+  box-shadow: 0 0 16px rgba(100,180,255,0.2);
+  animation: musicGlow 2s ease-in-out infinite;
+}
+.music-btn.playing .music-icon-inner { animation: musicSpin 3s linear infinite; }
+@keyframes musicGlow {
+  0%, 100% { box-shadow: 0 0 12px rgba(100,180,255,0.15); }
+  50% { box-shadow: 0 0 24px rgba(100,180,255,0.35); }
+}
+@keyframes musicSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+@media (max-width: 480px) {
+  .music-btn { bottom: 20px; left: 12px; width: 40px; height: 40px; font-size: 18px; }
+}
 
 /* ============================================================
    MONOLOGUE — Bottom-right typewriter, types once and stays
@@ -431,13 +525,11 @@ main {
 <div class="monologue" id="monologue"><span id="monoText"></span><span class="cursor"></span></div>
 
 <!-- Music Player -->
-<div class="music-player" id="musicPlayer" title="点击播放音乐">
-  <span class="music-icon">🎵</span>
-  <span class="music-info">
-    <span class="music-title" id="musicTitle">未添加音乐</span>
-    <span class="music-hint" id="musicHint">点击播放</span>
-  </span>
-  <span class="music-note" id="musicNote">♪</span>
+<button class="music-btn" id="musicBtn" title="音乐">🎵</button>
+
+<!-- Slideshow stage (appears after 3s) -->
+<div class="slideshow-stage" id="slideshowStage">
+  <div class="slideshow-typewriter" id="slideshowTypewriter"></div>
 </div>
 
 <script>
@@ -792,6 +884,74 @@ function typeLoop() {
 // Start typewriter after a slight delay
 setTimeout(typeLoop, 1500);
 
+// Slideshow typewriter — starts after 3s, simpler cycle
+const slideshowTwEl = document.getElementById('slideshowTypewriter');
+const slideshowPhrases = [
+  '第10000天，我终于学会了和世界温柔地相处',
+  '这一万天，是一场漫长的自我编译',
+  '没有报错，只有无数个安静的瞬间',
+  '下一万天，我选择用诗意去覆盖逻辑',
+  '愿你看到这页时，心里也落下一场花雨',
+];
+let sTwIdx = 0;
+let sTwChar = 0;
+let sTwDeleting = false;
+let sTwActive = false;
+
+function slideshowTypeLoop() {
+  if (!sTwActive) return;
+  const current = slideshowPhrases[sTwIdx];
+  if (!sTwDeleting) {
+    slideshowTwEl.innerHTML = current.substring(0, sTwChar) + '<span class="cursor"></span>';
+    sTwChar++;
+    if (sTwChar > current.length) {
+      sTwDeleting = true;
+      setTimeout(slideshowTypeLoop, 2500);
+      return;
+    }
+    setTimeout(slideshowTypeLoop, 55 + Math.random() * 55);
+  } else {
+    slideshowTwEl.innerHTML = current.substring(0, sTwChar) + '<span class="cursor"></span>';
+    sTwChar--;
+    if (sTwChar < 0) {
+      sTwDeleting = false;
+      sTwChar = 0;
+      sTwIdx = (sTwIdx + 1) % slideshowPhrases.length;
+      setTimeout(slideshowTypeLoop, 400);
+      return;
+    }
+    setTimeout(slideshowTypeLoop, 25 + Math.random() * 20);
+  }
+}
+
+// ============================================================
+// 3-SECOND TRANSITION: number shrinks to top-right, slideshow appears
+// ============================================================
+(function initTransition() {
+  const numberWrap = document.querySelector('.number-wrap');
+  const subtitle = document.querySelector('.subtitle');
+  const typewriterWrap = document.querySelector('.typewriter-wrap');
+  const tags = document.querySelector('.tags');
+  const slideshowStage = document.getElementById('slideshowStage');
+  const hint = document.querySelector('.hint');
+
+  setTimeout(() => {
+    // Shrink number to top-right
+    numberWrap.classList.add('shrunk');
+    // Hide subtitle, typewriter, tags
+    subtitle.classList.add('hidden');
+    typewriterWrap.classList.add('hidden');
+    tags.classList.add('hidden');
+    // Show slideshow stage
+    slideshowStage.classList.add('active');
+    // Start slideshow typewriter
+    sTwActive = true;
+    slideshowTypeLoop();
+    // Update hint
+    hint.textContent = '✦ 点击任意位置 · 燃放烟花 ✦';
+  }, 3000);
+})();
+
 // ============================================================
 // PREVENT DOUBLE-TAP ZOOM (Mobile)
 // ============================================================
@@ -830,10 +990,13 @@ async function loadManifest() {
 }
 
 // ============================================================
-// BACKGROUND IMAGE CAROUSEL
+// BACKGROUND IMAGE CAROUSEL → Slideshow Stage
 // ============================================================
 function initBgCarousel(imageList) {
-  const container = document.getElementById('bgCarousel');
+  const stage = document.getElementById('slideshowStage');
+
+  // Also keep bg-carousel for ambient background
+  const bgContainer = document.getElementById('bgCarousel');
   const toLoad = [...imageList];
   if (toLoad.length === 0) {
     for (let i = 1; i <= 20; i++) {
@@ -844,7 +1007,7 @@ function initBgCarousel(imageList) {
   let idx = 0;
   function testNext() {
     if (idx >= toLoad.length) {
-      if (validImages.length > 0) startCarousel(validImages);
+      if (validImages.length > 0) startSlideshow(validImages);
       return;
     }
     const src = toLoad[idx];
@@ -857,33 +1020,53 @@ function initBgCarousel(imageList) {
   }
   testNext();
 
-  function startCarousel(images) {
+  function startSlideshow(images) {
     if (images.length === 0) return;
     let current = 0;
+
+    // Populate slideshow stage
+    images.forEach((src, i) => {
+      const slide = document.createElement('div');
+      slide.className = 'slide-img';
+      slide.style.backgroundImage = `url(${src})`;
+      if (i === 0) slide.classList.add('active');
+      stage.insertBefore(slide, stage.firstChild); // Insert before typewriter overlay
+    });
+
+    // Also populate bg carousel for ambient
     images.forEach((src, i) => {
       const slide = document.createElement('div');
       slide.className = 'bg-slide';
       slide.style.backgroundImage = `url(${src})`;
       if (i === 0) slide.classList.add('active');
-      container.appendChild(slide);
+      bgContainer.appendChild(slide);
     });
-    const slides = container.querySelectorAll('.bg-slide');
+
+    const slides = stage.querySelectorAll('.slide-img');
+    const bgSlides = bgContainer.querySelectorAll('.bg-slide');
+
     function nextSlide() {
       slides[current].classList.remove('active');
-      slides[current].classList.add('exit');
-      current = (current + 1) % slides.length;
-      slides[current].classList.remove('exit');
+      bgSlides[current].classList.remove('active');
+      bgSlides[current].classList.add('exit');
+      current = (current + 1) % images.length;
       slides[current].classList.add('active');
+      bgSlides[current].classList.remove('exit');
+      bgSlides[current].classList.add('active');
     }
-    if (images.length > 1) setInterval(nextSlide, 8000);
+
+    if (images.length > 1) setInterval(nextSlide, 5000);
   }
 }
 
 // ============================================================
-// MUSIC PLAYER
+// MUSIC PLAYER — Icon-only button
 // ============================================================
 function initMusicPlayer(musicList) {
   if (!musicList || musicList.length === 0) return;
+
+  const btn = document.getElementById('musicBtn');
+  if (!btn) return;
 
   let currentTrack = 0;
   let isPlaying = false;
@@ -897,8 +1080,21 @@ function initMusicPlayer(musicList) {
   }
 
   function play() {
-    audio.play().then(() => { isPlaying = true; }).catch(() => {});
+    audio.play().then(() => {
+      isPlaying = true;
+      btn.classList.add('playing');
+    }).catch(() => {});
   }
+
+  function pause() {
+    audio.pause(); isPlaying = false;
+    btn.classList.remove('playing');
+  }
+
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    isPlaying ? pause() : play();
+  });
 
   audio.addEventListener('ended', () => {
     currentTrack = (currentTrack + 1) % playlist.length;
@@ -911,11 +1107,11 @@ function initMusicPlayer(musicList) {
 
   loadTrack(0);
 
-  // Auto-play on first user interaction (click/touch for fireworks)
+  // Auto-play on first user interaction
   let started = false;
   function tryStart() {
     if (started) return;
-    audio.play().then(() => { started = true; isPlaying = true; }).catch(() => {});
+    audio.play().then(() => { started = true; isPlaying = true; btn.classList.add('playing'); }).catch(() => {});
   }
   document.addEventListener('click', tryStart);
   document.addEventListener('touchstart', tryStart);
@@ -951,56 +1147,69 @@ loadManifest();
 })();
 
 // ============================================================
-// METEOR SHOWER — Canvas Particle Meteors
+// METEOR SHOWER — Enhanced Canvas Particle Meteors
 // ============================================================
 const meteors = [];
 
 class CanvasMeteor {
-  constructor() {
-    // Start from top or top-right area, moving diagonally down-left
-    this.x = Math.random() * W * 1.2;
-    this.y = Math.random() * H * 0.3;
-    const angle = (Math.PI / 4) + Math.random() * (Math.PI / 6); // 45-75 degrees (down-left)
-    const speed = 6 + Math.random() * 10;
-    this.vx = -Math.cos(angle) * speed;
-    this.vy = Math.sin(angle) * speed;
-    this.alpha = 0.8 + Math.random() * 0.2;
-    this.size = 1.5 + Math.random() * 2.5;
-    this.trailLen = 80 + Math.random() * 160;
+  constructor(type) {
+    this.type = type || (Math.random() > 0.5 ? 'fast' : 'slow');
+    // Start from top area
+    this.x = Math.random() * W * 1.1;
+    this.y = -20 + Math.random() * H * 0.25;
+
+    if (this.type === 'fast') {
+      // Fast, long trail, bright
+      const angle = Math.PI * 0.28 + Math.random() * 0.15; // 50-77 deg (down-right)
+      const speed = 9 + Math.random() * 12;
+      this.vx = Math.cos(angle) * speed;
+      this.vy = Math.sin(angle) * speed;
+      this.alpha = 0.9;
+      this.size = 2 + Math.random() * 3;
+      this.maxTrail = 20 + Math.floor(Math.random() * 15);
+      this.maxLife = 60 + Math.random() * 40;
+      this.hue = 210 + Math.random() * 40; // blue-white
+    } else {
+      // Slow, bright head, shorter trail
+      const angle = Math.PI * 0.22 + Math.random() * 0.2; // 40-75 deg
+      const speed = 4 + Math.random() * 6;
+      this.vx = Math.cos(angle) * speed;
+      this.vy = Math.sin(angle) * speed;
+      this.alpha = 0.85;
+      this.size = 2.5 + Math.random() * 4;
+      this.maxTrail = 12 + Math.floor(Math.random() * 10);
+      this.maxLife = 90 + Math.random() * 50;
+      this.hue = 250 + Math.random() * 60; // purple-white
+    }
+
     this.trail = [];
-    this.maxTrail = 15;
     this.life = 0;
-    this.maxLife = 80 + Math.random() * 60;
-    // Color: white-blue to white-purple
-    const hue = 200 + Math.random() * 60;
-    this.color = `hsla(${hue}, 80%, 85%, `;
-    this.headColor = `hsla(${hue}, 20%, 95%, `;
+    this.color = `hsla(${this.hue}, 70%, 85%, `;
+    this.headColor = `hsla(${this.hue}, 15%, 95%, `;
   }
 
   update() {
     this.life++;
-    // Store trail points
     this.trail.push({ x: this.x, y: this.y });
     if (this.trail.length > this.maxTrail) this.trail.shift();
-    // Move
     this.x += this.vx;
     this.y += this.vy;
-    // Fade out toward end of life
-    if (this.life > this.maxLife * 0.7) {
-      this.alpha = Math.max(0, this.alpha - 0.03);
+    if (this.life > this.maxLife * 0.65) {
+      this.alpha = Math.max(0, this.alpha - 0.025);
     }
   }
 
   draw(ctx) {
-    if (this.alpha <= 0) return;
-    // Draw trail
+    if (this.alpha <= 0 || this.trail.length < 2) return;
+    // Draw trail as gradient polyline
     for (let i = 0; i < this.trail.length - 1; i++) {
       const t = this.trail[i];
       const ratio = i / this.trail.length;
       ctx.save();
-      ctx.globalAlpha = this.alpha * ratio * 0.5;
+      ctx.globalAlpha = this.alpha * ratio * 0.65;
       ctx.strokeStyle = this.color + (ratio * 0.9) + ')';
-      ctx.lineWidth = this.size * ratio;
+      ctx.lineWidth = this.size * (0.3 + ratio * 0.7);
+      ctx.lineCap = 'round';
       ctx.beginPath();
       ctx.moveTo(t.x, t.y);
       const next = this.trail[i + 1];
@@ -1008,50 +1217,59 @@ class CanvasMeteor {
       ctx.stroke();
       ctx.restore();
     }
-    // Draw head glow
+    // Head glow
     ctx.save();
     ctx.globalAlpha = this.alpha;
-    const grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size * 8);
+    const grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size * 10);
     grad.addColorStop(0, this.headColor + '1)');
-    grad.addColorStop(0.2, this.headColor + '0.6)');
+    grad.addColorStop(0.15, this.headColor + '0.7)');
+    grad.addColorStop(0.5, this.headColor + '0.15)');
     grad.addColorStop(1, this.headColor + '0)');
     ctx.fillStyle = grad;
     ctx.beginPath();
-    ctx.arc(this.x, this.y, this.size * 8, 0, Math.PI * 2);
+    ctx.arc(this.x, this.y, this.size * 10, 0, Math.PI * 2);
     ctx.fill();
-    // Bright core
+    // Bright white core
     ctx.fillStyle = '#fff';
     ctx.beginPath();
-    ctx.arc(this.x, this.y, this.size * 0.7, 0, Math.PI * 2);
+    ctx.arc(this.x, this.y, this.size * 0.5, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
   }
 
-  isDead() { return this.alpha <= 0 || this.x < -100 || this.y > H + 100; }
+  isDead() { return this.alpha <= 0 || this.x > W + 150 || this.y > H + 150 || this.x < -150; }
 }
 
-function spawnCanvasMeteor() {
-  meteors.push(new CanvasMeteor());
+function spawnCanvasMeteor(type) {
+  meteors.push(new CanvasMeteor(type));
 }
-
-// Update the animate loop to also draw meteors
-const originalAnimate = animate;
-// Override: we'll update the animate function directly below
 
 // Initial burst
-for (let i = 0; i < 5; i++) {
-  setTimeout(() => spawnCanvasMeteor(), 500 + i * 400);
+for (let i = 0; i < 6; i++) {
+  setTimeout(() => spawnCanvasMeteor(), 300 + i * 350);
 }
 
-// Schedule ongoing meteors
+// Frequent meteors + periodic showers
 (function scheduleMeteors() {
-  const delay = 2000 + Math.random() * 4000;
+  const delay = 1000 + Math.random() * 2500;
   setTimeout(() => {
-    const burst = Math.random() > 0.7 ? 2 + Math.floor(Math.random() * 2) : 1;
+    const burst = Math.random() > 0.8 ? 2 + Math.floor(Math.random() * 3) : 1;
     for (let i = 0; i < burst; i++) {
-      setTimeout(() => spawnCanvasMeteor(), i * 150);
+      setTimeout(() => spawnCanvasMeteor(), i * 120);
     }
     scheduleMeteors();
+  }, delay);
+})();
+
+// Meteor shower bursts every 12-20 seconds
+(function scheduleShowers() {
+  const delay = 12000 + Math.random() * 8000;
+  setTimeout(() => {
+    const count = 5 + Math.floor(Math.random() * 6);
+    for (let i = 0; i < count; i++) {
+      setTimeout(() => spawnCanvasMeteor(i % 2 === 0 ? 'fast' : 'slow'), i * 80 + Math.random() * 60);
+    }
+    scheduleShowers();
   }, delay);
 })();
 </script>
