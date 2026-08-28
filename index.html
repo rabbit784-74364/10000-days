@@ -592,13 +592,19 @@ animate();
 // CLICK FIREWORKS
 // ============================================================
 function handleInteraction(e) {
-  e.preventDefault();
   let x, y;
-  if (e.touches) { x = e.touches[0].clientX; y = e.touches[0].clientY; }
-  else { x = e.clientX; y = e.clientY; }
-  const count = 1 + Math.floor(Math.random() * 3);
-  for (let i = 0; i < count; i++) {
-    spawnFirework(x + (Math.random() - 0.5) * 60, y + (Math.random() - 0.5) * 60);
+  if (e.touches && e.touches.length > 0) {
+    x = e.touches[0].clientX; y = e.touches[0].clientY;
+    e.preventDefault(); // prevent scroll on mobile
+  } else if (e.changedTouches && e.changedTouches.length > 0) {
+    x = e.changedTouches[0].clientX; y = e.changedTouches[0].clientY;
+  } else {
+    x = e.clientX; y = e.clientY;
+  }
+  if (x == null || y == null) return;
+  spawnFirework(x, y);
+  for (let i = 0; i < 2; i++) {
+    spawnFirework(x + (Math.random() - 0.5) * 80, y + (Math.random() - 0.5) * 80);
   }
 }
 document.addEventListener('click', handleInteraction);
