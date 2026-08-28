@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<!-- WeChat / Social Share Meta -->
 <meta property="og:title" content="🪐 10000天！一个程序员的星际里程碑">
 <meta property="og:description" content="1999.04.13 → 2026.08.29，从 Hello World 到改变世界，整整一万天。灵魂滚烫，代码成诗——这场宇宙级庆典，献给每一个热烈活着的创造者。">
 <meta property="og:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='630'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23ff6b6b'/%3E%3Cstop offset='25%25' style='stop-color:%23ffd93d'/%3E%3Cstop offset='50%25' style='stop-color:%236bcb77'/%3E%3Cstop offset='75%25' style='stop-color:%234d96ff'/%3E%3Cstop offset='100%25' style='stop-color:%23ff6bff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='630' fill='%23050510'/%3E%3Ctext x='600' y='280' font-family='system-ui,sans-serif' font-size='180' font-weight='900' text-anchor='middle' fill='url(%23g)'%3E10000%3C/text%3E%3Ctext x='600' y='400' font-family='system-ui,sans-serif' font-size='48' fill='%23ffffff' text-anchor='middle' opacity='0.8'%3E1999.04.13 → 2026.08.29%3C/text%3E%3Ctext x='600' y='500' font-family='system-ui,sans-serif' font-size='28' fill='%238888aa' text-anchor='middle'%3E🪐 A Programmer's 10,000-Day Milestone 🚀%3C/text%3E%3C/svg%3E">
@@ -21,24 +20,17 @@
 
 :root {
   --bg-deep: #050510;
-  --text-primary: #ffffff;
-  --text-secondary: #aab;
-  --glow-rainbow: linear-gradient(135deg, #ff6b6b, #ffd93d, #6bcb77, #4d96ff, #ff6bff, #ff6b6b);
 }
 
 body {
-  width: 100vw;
-  height: 100vh;
-  height: 100dvh; /* dynamic viewport for mobile */
+  width: 100vw; height: 100vh; height: 100dvh;
   overflow: hidden;
-  background: var(--bg-deep);
+  background: #050510;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
-  color: var(--text-primary);
+  color: #fff;
   cursor: crosshair;
   -webkit-tap-highlight-color: transparent;
-  user-select: none;
-  -webkit-user-select: none;
-  -webkit-touch-callout: none;
+  user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
 }
 
 /* ============================================================
@@ -50,14 +42,12 @@ body {
     radial-gradient(ellipse 80% 60% at 20% 30%, rgba(120, 60, 200, 0.15) 0%, transparent 60%),
     radial-gradient(ellipse 60% 80% at 80% 70%, rgba(60, 100, 220, 0.12) 0%, transparent 60%),
     radial-gradient(ellipse 50% 50% at 50% 50%, rgba(200, 60, 120, 0.08) 0%, transparent 70%),
-    var(--bg-deep);
+    #050510;
 }
 
-/* Slowly rotating light streams */
 .bg-orb {
   position: fixed; z-index: 0; pointer-events: none;
   border-radius: 50%; filter: blur(120px); opacity: 0.4;
-  will-change: transform;
 }
 .bg-orb-1 {
   width: 60vw; height: 60vw; max-width: 800px; max-height: 800px;
@@ -94,23 +84,19 @@ body {
   50%  { transform: translate(-40%, -60%) rotate(180deg) scale(1.3); }
 }
 
-/* Starfield layer */
+/* Stars */
 .stars {
   position: fixed; inset: 0; z-index: 0; pointer-events: none;
 }
 
 /* ============================================================
-   FIREWORKS CANVAS
+   CANVAS & FALLING
    ============================================================ */
 #fireworksCanvas {
-  position: fixed; top: 0; left: 0;
-  width: 100%; height: 100%;
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
   z-index: 1; pointer-events: none;
 }
 
-/* ============================================================
-   FALLING ELEMENTS CONTAINER
-   ============================================================ */
 #fallingLayer {
   position: fixed; inset: 0; z-index: 1; pointer-events: none; overflow: hidden;
 }
@@ -128,200 +114,7 @@ body {
 }
 
 /* ============================================================
-   MAIN CONTENT
-   ============================================================ */
-main {
-  position: relative; z-index: 2;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  height: 100vh; height: 100dvh;
-  pointer-events: none;
-  padding: 2rem;
-}
-
-/* Big "10000" number */
-.number-wrap {
-  position: relative;
-  pointer-events: none;
-  transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 10;
-}
-.number {
-  font-size: clamp(80px, 18vw, 200px);
-  font-weight: 900;
-  line-height: 1;
-  letter-spacing: -0.03em;
-  /* Fallback solid color */
-  color: #c06bff;
-  /* Rainbow gradient text */
-  background: linear-gradient(
-    135deg,
-    #ff6b6b 0%, #ffd93d 20%, #6bcb77 40%,
-    #4d96ff 60%, #c06bff 80%, #ff6b6b 100%
-  );
-  background-size: 300% 300%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: breatheFloat 4s ease-in-out infinite, gradientShift 8s linear infinite;
-  filter: drop-shadow(0 0 30px rgba(180, 100, 255, 0.4));
-  transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Shrunk state — moves to top-right */
-.number-wrap.shrunk {
-  position: fixed;
-  top: 18px; right: 20px;
-  transform: none;
-  z-index: 10;
-}
-.number-wrap.shrunk .number {
-  font-size: 32px;
-  animation: none;
-  filter: drop-shadow(0 0 12px rgba(180, 100, 255, 0.5));
-}
-@media (max-width: 480px) {
-  .number-wrap.shrunk { top: 12px; right: 12px; }
-  .number-wrap.shrunk .number { font-size: 24px; }
-}
-
-@keyframes breatheFloat {
-  0%, 100% { transform: translateY(0) scale(1); }
-  25%  { transform: translateY(-8px) scale(1.03); }
-  50%  { transform: translateY(-4px) scale(1.01); }
-  75%  { transform: translateY(-12px) scale(1.04); }
-}
-@keyframes gradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-/* "天" subtitle */
-.subtitle {
-  font-size: clamp(20px, 5vw, 48px);
-  font-weight: 300;
-  color: rgba(255,255,255,0.6);
-  margin-top: -0.2em;
-  letter-spacing: 0.3em;
-  pointer-events: none;
-  transition: opacity 0.8s ease;
-}
-.subtitle.hidden { opacity: 0; pointer-events: none; }
-
-/* Typewriter */
-.typewriter-wrap {
-  margin-top: 1.5rem;
-  min-height: 2.5rem;
-  display: flex; align-items: center; justify-content: center;
-  pointer-events: none;
-  transition: opacity 0.8s ease;
-}
-.typewriter-wrap.hidden { opacity: 0; pointer-events: none; }
-.typewriter {
-  font-size: clamp(14px, 3vw, 22px);
-  color: rgba(255,255,255,0.85);
-  font-weight: 300;
-  border-right: 2px solid rgba(255,255,255,0.6);
-  padding-right: 4px;
-  animation: cursorBlink 0.8s step-end infinite;
-  white-space: nowrap;
-}
-@keyframes cursorBlink {
-  50% { border-color: transparent; }
-}
-
-/* Tag chips */
-.tags {
-  display: flex; flex-wrap: wrap; gap: 0.6rem;
-  justify-content: center; margin-top: 1.8rem;
-  pointer-events: none;
-  transition: opacity 0.8s ease;
-}
-.tags.hidden { opacity: 0; pointer-events: none; }
-.tag {
-  display: inline-block;
-  padding: 0.4rem 1rem;
-  border-radius: 99px;
-  font-size: clamp(11px, 2.2vw, 14px);
-  font-weight: 500;
-  color: rgba(255,255,255,0.85);
-  background: rgba(255,255,255,0.08);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.12);
-  white-space: nowrap;
-}
-
-/* ============================================================
-   SLIDESHOW STAGE — Center image carousel after 3s
-   ============================================================ */
-.slideshow-stage {
-  position: fixed; inset: 0; z-index: 2;
-  opacity: 0; pointer-events: none;
-  transition: opacity 1s ease;
-  display: flex; align-items: center; justify-content: center;
-}
-.slideshow-stage.active { opacity: 1; }
-.slideshow-stage .slide-img {
-  position: absolute; inset: 0;
-  background-size: cover; background-position: center;
-  opacity: 0; transition: opacity 1.5s ease;
-}
-.slideshow-stage .slide-img.active { opacity: 1; }
-/* Dark overlay for readability */
-.slideshow-stage::after {
-  content: ''; position: absolute; inset: 0;
-  background: rgba(5, 5, 16, 0.45);
-  pointer-events: none;
-}
-/* Typewriter overlay on slideshow */
-.slideshow-typewriter {
-  position: relative; z-index: 3;
-  font-size: clamp(15px, 3.5vw, 24px);
-  color: rgba(255,255,255,0.9);
-  font-weight: 300;
-  text-align: center;
-  padding: 0 2rem;
-  text-shadow: 0 0 20px rgba(0,0,0,0.6);
-  min-height: 2em;
-  display: flex; align-items: center; justify-content: center;
-}
-.slideshow-typewriter .cursor {
-  display: inline-block; width: 2px; height: 1.2em;
-  background: rgba(255,255,255,0.7);
-  margin-left: 4px;
-  animation: cursorBlink 0.8s step-end infinite;
-  vertical-align: middle;
-}
-
-/* Bottom hint */
-.hint {
-  position: fixed; bottom: clamp(30px, 6vh, 50px);
-  z-index: 3; pointer-events: none;
-  font-size: clamp(12px, 2.5vw, 15px);
-  color: rgba(255,255,255,0.35);
-  letter-spacing: 0.1em;
-  animation: hintPulse 3s ease-in-out infinite;
-}
-@keyframes hintPulse {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 0.7; }
-}
-
-/* ============================================================
-   INITIAL FADE IN
-   ============================================================ */
-.fade-in {
-  animation: fadeIn 1.5s ease-out forwards;
-}
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(30px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ============================================================
-   AURORA BOREALIS — Dynamic Northern Lights
+   AURORA
    ============================================================ */
 .aurora-wrap {
   position: fixed; inset: 0; z-index: 0; pointer-events: none;
@@ -333,27 +126,19 @@ main {
   opacity: 0.5; mix-blend-mode: screen;
 }
 .aurora-band:nth-child(1) {
-  background: linear-gradient(180deg,
-    transparent 0%, rgba(0, 255, 160, 0.15) 25%,
-    rgba(80, 220, 180, 0.25) 50%, rgba(0, 255, 160, 0.1) 75%, transparent 100%);
+  background: linear-gradient(180deg, transparent 0%, rgba(0,255,160,0.15) 25%, rgba(80,220,180,0.25) 50%, rgba(0,255,160,0.1) 75%, transparent 100%);
   top: 5%; animation: auroraWave1 16s ease-in-out infinite;
 }
 .aurora-band:nth-child(2) {
-  background: linear-gradient(180deg,
-    transparent 0%, rgba(120, 80, 255, 0.2) 30%,
-    rgba(60, 220, 200, 0.2) 55%, rgba(120, 80, 255, 0.1) 80%, transparent 100%);
+  background: linear-gradient(180deg, transparent 0%, rgba(120,80,255,0.2) 30%, rgba(60,220,200,0.2) 55%, rgba(120,80,255,0.1) 80%, transparent 100%);
   top: 20%; animation: auroraWave2 20s ease-in-out infinite;
 }
 .aurora-band:nth-child(3) {
-  background: linear-gradient(180deg,
-    transparent 0%, rgba(0, 200, 220, 0.18) 25%,
-    rgba(100, 255, 180, 0.22) 50%, rgba(0, 200, 220, 0.08) 75%, transparent 100%);
+  background: linear-gradient(180deg, transparent 0%, rgba(0,200,220,0.18) 25%, rgba(100,255,180,0.22) 50%, rgba(0,200,220,0.08) 75%, transparent 100%);
   top: 10%; animation: auroraWave3 24s ease-in-out infinite;
 }
 .aurora-band:nth-child(4) {
-  background: linear-gradient(180deg,
-    transparent 0%, rgba(200, 100, 200, 0.15) 30%,
-    rgba(100, 200, 255, 0.18) 55%, rgba(200, 100, 200, 0.08) 80%, transparent 100%);
+  background: linear-gradient(180deg, transparent 0%, rgba(200,100,200,0.15) 30%, rgba(100,200,255,0.18) 55%, rgba(200,100,200,0.08) 80%, transparent 100%);
   top: 35%; animation: auroraWave4 18s ease-in-out infinite;
 }
 @keyframes auroraWave1 {
@@ -379,32 +164,165 @@ main {
 }
 
 /* ============================================================
-   BACKGROUND IMAGE CAROUSEL
+   MAIN CONTENT
    ============================================================ */
-.bg-carousel {
-  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+main {
+  position: fixed; inset: 0; z-index: 2;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  pointer-events: none; padding: 2rem;
+  transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.bg-slide {
+
+/* "10000" number */
+.number {
+  font-size: clamp(80px, 18vw, 200px);
+  font-weight: 900; line-height: 1; letter-spacing: -0.03em;
+  color: #c06bff;
+  background: linear-gradient(135deg, #ff6b6b 0%, #ffd93d 20%, #6bcb77 40%, #4d96ff 60%, #c06bff 80%, #ff6b6b 100%);
+  background-size: 300% 300%;
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: breatheFloat 4s ease-in-out infinite, gradientShift 8s linear infinite;
+  filter: drop-shadow(0 0 30px rgba(180, 100, 255, 0.4));
+  transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+@keyframes breatheFloat {
+  0%, 100% { transform: translateY(0) scale(1); }
+  25%  { transform: translateY(-8px) scale(1.03); }
+  50%  { transform: translateY(-4px) scale(1.01); }
+  75%  { transform: translateY(-12px) scale(1.04); }
+}
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* When shrunk to top-right */
+main.shrunk {
+  position: fixed; inset: auto;
+  top: 12px; right: 16px;
+  width: auto; height: auto;
+  padding: 0;
+  display: block;
+}
+main.shrunk .number {
+  font-size: 28px;
+  animation: none;
+  filter: drop-shadow(0 0 10px rgba(180, 100, 255, 0.5));
+}
+main.shrunk .subtitle,
+main.shrunk .typewriter-wrap,
+main.shrunk .tags { display: none; }
+
+.subtitle {
+  font-size: clamp(20px, 5vw, 48px);
+  font-weight: 300;
+  color: rgba(255,255,255,0.6);
+  margin-top: -0.2em;
+  letter-spacing: 0.3em;
+  pointer-events: none;
+}
+
+.typewriter-wrap {
+  margin-top: 1.5rem; min-height: 2.5rem;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
+}
+.typewriter {
+  font-size: clamp(14px, 3vw, 22px);
+  color: rgba(255,255,255,0.85); font-weight: 300;
+  border-right: 2px solid rgba(255,255,255,0.6);
+  padding-right: 4px;
+  animation: cursorBlink 0.8s step-end infinite;
+  white-space: nowrap;
+}
+@keyframes cursorBlink { 50% { border-color: transparent; } }
+
+.tags {
+  display: flex; flex-wrap: wrap; gap: 0.6rem;
+  justify-content: center; margin-top: 1.8rem;
+  pointer-events: none;
+}
+.tag {
+  display: inline-block; padding: 0.4rem 1rem;
+  border-radius: 99px;
+  font-size: clamp(11px, 2.2vw, 14px); font-weight: 500;
+  color: rgba(255,255,255,0.85);
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.12);
+  white-space: nowrap;
+}
+
+/* ============================================================
+   SLIDESHOW
+   ============================================================ */
+.slideshow-stage {
+  position: fixed; inset: 0; z-index: 2;
+  opacity: 0; pointer-events: none;
+  transition: opacity 1s ease;
+}
+.slideshow-stage.active { opacity: 1; }
+.slideshow-stage .slide-img {
   position: absolute; inset: 0;
   background-size: cover; background-position: center;
-  opacity: 0; transition: opacity 2.5s ease-in-out;
-  animation: kenBurns 30s ease-in-out infinite;
+  opacity: 0; transition: opacity 1.5s ease;
 }
-.bg-slide.active { opacity: 0.35; }
-.bg-slide.exit { opacity: 0; }
-@keyframes kenBurns {
-  0%, 100% { transform: scale(1); }
-  50%  { transform: scale(1.08); }
+.slideshow-stage .slide-img.active { opacity: 1; }
+.slideshow-stage::after {
+  content: ''; position: absolute; inset: 0;
+  background: rgba(5, 5, 16, 0.45);
+  pointer-events: none;
+}
+.slideshow-typewriter {
+  position: relative; z-index: 3;
+  font-size: clamp(15px, 3.5vw, 24px);
+  color: rgba(255,255,255,0.9); font-weight: 300;
+  text-align: center; padding: 0 2rem;
+  text-shadow: 0 0 20px rgba(0,0,0,0.6);
+  min-height: 2em; display: flex; align-items: center; justify-content: center;
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+}
+.slideshow-typewriter .cursor {
+  display: inline-block; width: 2px; height: 1.2em;
+  background: rgba(255,255,255,0.7);
+  margin-left: 4px;
+  animation: cursorBlink 0.8s step-end infinite;
+  vertical-align: middle;
 }
 
 /* ============================================================
-   METEOR SHOWER — Canvas Particle Meteors
-   (rendered on #fireworksCanvas, see JS)
+   HINT & MONOLOGUE & MUSIC
    ============================================================ */
+.hint {
+  position: fixed; bottom: clamp(30px, 6vh, 50px); z-index: 3;
+  pointer-events: none; left: 50%; transform: translateX(-50%);
+  font-size: clamp(12px, 2.5vw, 15px);
+  color: rgba(255,255,255,0.35);
+  letter-spacing: 0.1em;
+  animation: hintPulse 3s ease-in-out infinite;
+  white-space: nowrap;
+}
+@keyframes hintPulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.7; } }
 
-/* ============================================================
-   MUSIC PLAYER — Icon-only button
-   ============================================================ */
+.monologue {
+  position: fixed; bottom: 40px; right: 20px; z-index: 3;
+  max-width: 280px; font-size: 13px; line-height: 1.9;
+  color: rgba(255,255,255,0.65); text-align: right;
+  pointer-events: none; opacity: 0; transition: opacity 1s;
+}
+.monologue.visible { opacity: 1; }
+.monologue .cursor {
+  display: inline-block; width: 2px; height: 14px;
+  background: rgba(255,255,255,0.5);
+  margin-left: 2px; vertical-align: middle;
+  animation: monoBlink 0.7s step-end infinite;
+}
+.monologue.done .cursor { animation: monoBlink 1.5s step-end infinite; }
+@keyframes monoBlink { 50% { opacity: 0; } }
+
 .music-btn {
   position: fixed; bottom: 28px; left: 20px; z-index: 10;
   width: 44px; height: 44px; border-radius: 50%;
@@ -422,45 +340,9 @@ main {
   box-shadow: 0 0 16px rgba(100,180,255,0.2);
   animation: musicGlow 2s ease-in-out infinite;
 }
-.music-btn.playing .music-icon-inner { animation: musicSpin 3s linear infinite; }
 @keyframes musicGlow {
   0%, 100% { box-shadow: 0 0 12px rgba(100,180,255,0.15); }
   50% { box-shadow: 0 0 24px rgba(100,180,255,0.35); }
-}
-@keyframes musicSpin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-@media (max-width: 480px) {
-  .music-btn { bottom: 20px; left: 12px; width: 40px; height: 40px; font-size: 18px; }
-}
-
-/* ============================================================
-   MONOLOGUE — Bottom-right typewriter, types once and stays
-   ============================================================ */
-.monologue {
-  position: fixed; bottom: 40px; right: 20px; z-index: 3;
-  max-width: 280px;
-  font-size: 13px; line-height: 1.9;
-  color: rgba(255,255,255,0.65);
-  text-align: right;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 1s;
-}
-.monologue.visible { opacity: 1; }
-.monologue .cursor {
-  display: inline-block; width: 2px; height: 14px;
-  background: rgba(255,255,255,0.5);
-  margin-left: 2px; vertical-align: middle;
-  animation: monoBlink 0.7s step-end infinite;
-}
-.monologue.done .cursor { animation: monoBlink 1.5s step-end infinite; }
-@keyframes monoBlink {
-  50% { opacity: 0; }
-}
-@media (max-width: 480px) {
-  .monologue { max-width: 200px; font-size: 11px; right: 8px; bottom: 30px; }
 }
 
 /* ============================================================
@@ -470,6 +352,10 @@ main {
   .tag { padding: 0.3rem 0.7rem; font-size: 11px; }
   .tags { gap: 0.4rem; }
   .typewriter { font-size: 14px; }
+  .monologue { max-width: 200px; font-size: 11px; right: 8px; bottom: 30px; }
+  .music-btn { bottom: 20px; left: 12px; width: 40px; height: 40px; font-size: 18px; }
+  main.shrunk { top: 10px; right: 10px; }
+  main.shrunk .number { font-size: 22px; }
 }
 @media (min-width: 1200px) {
   .number { font-size: 220px; }
@@ -478,7 +364,13 @@ main {
 </head>
 <body>
 
-<!-- Aurora Borealis -->
+<!-- Background layers -->
+<div class="bg-layer"></div>
+<div class="bg-orb bg-orb-1"></div>
+<div class="bg-orb bg-orb-2"></div>
+<div class="bg-orb bg-orb-3"></div>
+
+<!-- Aurora -->
 <div class="aurora-wrap">
   <div class="aurora-band"></div>
   <div class="aurora-band"></div>
@@ -489,12 +381,6 @@ main {
 <!-- Background image carousel -->
 <div class="bg-carousel" id="bgCarousel"></div>
 
-<!-- Background layers -->
-<div class="bg-layer"></div>
-<div class="bg-orb bg-orb-1"></div>
-<div class="bg-orb bg-orb-2"></div>
-<div class="bg-orb bg-orb-3"></div>
-
 <!-- Fireworks canvas -->
 <canvas id="fireworksCanvas"></canvas>
 
@@ -503,16 +389,12 @@ main {
 
 <!-- Main content -->
 <main id="mainContent">
-  <div class="number-wrap fade-in" style="animation-delay: 0.3s;">
-    <div class="number">10000</div>
-  </div>
-  <div class="subtitle fade-in" style="animation-delay: 0.6s;">天</div>
-
+  <div class="number">10000</div>
+  <div class="subtitle">天</div>
   <div class="typewriter-wrap">
     <span class="typewriter" id="typewriter"></span>
   </div>
-
-  <div class="tags fade-in" style="animation-delay: 1s;">
+  <div class="tags">
     <span class="tag">📅 1999.04.13 → 2026.08.29</span>
     <span class="tag">⏱️ uptime 10000 days</span>
     <span class="tag">🚀 git tag v10000.0</span>
@@ -524,10 +406,8 @@ main {
 
 <p class="hint">✦ 点击任意位置 · 燃放烟花 ✦</p>
 
-<!-- Monologue -- bottom-right typewriter -->
 <div class="monologue" id="monologue"><span id="monoText"></span><span class="cursor"></span></div>
 
-<!-- Music Player -->
 <button class="music-btn" id="musicBtn" title="音乐">🎵</button>
 
 <!-- Slideshow stage (appears after 3s) -->
@@ -537,234 +417,226 @@ main {
 
 <script>
 // ============================================================
-// FIREWORKS SYSTEM (Canvas)
+// FIREWORKS SYSTEM
 // ============================================================
-
 const canvas = document.getElementById('fireworksCanvas');
 const ctx = canvas.getContext('2d');
+let W = canvas.width = window.innerWidth;
+let H = canvas.height = window.innerHeight;
 
-let W, H;
-
-function resize() {
-  W = canvas.width  = window.innerWidth;
-  H = canvas.height = window.innerHeight;
-}
-resize();
 window.addEventListener('resize', () => {
-  resize();
-  // Re-create starfield on resize
-  initStars();
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
 });
 
-// ---- Particle ----
 class Particle {
-  constructor(x, y, color, options = {}) {
-    this.x = x;
-    this.y = y;
+  constructor(x, y, color, opts = {}) {
+    this.x = x; this.y = y;
     const angle = Math.random() * Math.PI * 2;
-    const speed = (options.speed || 2) + Math.random() * (options.speedVar || 5);
+    const speed = (opts.speed || 2) + Math.random() * (opts.speedVar || 5);
     this.vx = Math.cos(angle) * speed;
     this.vy = Math.sin(angle) * speed;
     this.color = color;
     this.alpha = 1;
-    this.size = options.size || (1.5 + Math.random() * 3);
-    this.gravity = options.gravity || 0.04;
-    this.fade = options.fade || (0.008 + Math.random() * 0.02);
-    this.friction = options.friction || 0.985;
-    // Sparkle trail
+    this.size = opts.size || (1.5 + Math.random() * 3);
+    this.gravity = opts.gravity || 0.04;
+    this.fade = opts.fade || (0.008 + Math.random() * 0.02);
+    this.friction = opts.friction || 0.985;
     this.trail = [];
-    this.maxTrail = options.trail || 0;
-    this.hue = options.hueShift || 0;
+    this.maxTrail = opts.trail || 0;
   }
-
   update() {
-    // Save position for trail
     if (this.maxTrail > 0) {
       this.trail.push({ x: this.x, y: this.y, alpha: this.alpha });
       if (this.trail.length > this.maxTrail) this.trail.shift();
     }
-    // Physics
-    this.vx *= this.friction;
-    this.vy *= this.friction;
+    this.vx *= this.friction; this.vy *= this.friction;
     this.vy += this.gravity;
-    this.x += this.vx;
-    this.y += this.vy;
+    this.x += this.vx; this.y += this.vy;
     this.alpha -= this.fade;
-    // Update trail alpha
     this.trail.forEach(t => t.alpha -= this.fade * 2);
   }
-
   draw(ctx) {
-    // Draw trail
+    if (this.alpha <= 0) return;
     if (this.maxTrail > 0) {
       this.trail.forEach(t => {
         if (t.alpha <= 0) return;
-        ctx.save();
-        ctx.globalAlpha = t.alpha * 0.4;
+        ctx.save(); ctx.globalAlpha = t.alpha * 0.4;
         ctx.fillStyle = this.color;
-        ctx.beginPath();
-        ctx.arc(t.x, t.y, this.size * 0.6, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.beginPath(); ctx.arc(t.x, t.y, this.size * 0.6, 0, Math.PI * 2); ctx.fill();
         ctx.restore();
       });
     }
-    // Draw main particle
-    if (this.alpha <= 0) return;
-    ctx.save();
-    ctx.globalAlpha = this.alpha;
+    ctx.save(); ctx.globalAlpha = this.alpha;
     ctx.fillStyle = this.color;
-    ctx.shadowColor = this.color;
-    ctx.shadowBlur = this.size * 2;
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.shadowColor = this.color; ctx.shadowBlur = this.size * 2;
+    ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
     ctx.restore();
   }
-
   isDead() { return this.alpha <= 0; }
 }
 
-// ---- Firework (burst of particles) ----
 class Firework {
-  constructor(x, y, options = {}) {
+  constructor(x, y, opts = {}) {
     this.particles = [];
-    const palette = options.palette || [
-      '#ff6b6b', '#ffd93d', '#6bcb77', '#4d96ff',
-      '#c06bff', '#ff9f43', '#00d2d3', '#ff6bff',
-      '#ff8a5c', '#a29bfe', '#fd79a8', '#fdcb6e'
-    ];
-    const count = options.count || (80 + Math.floor(Math.random() * 60));
+    const palette = opts.palette || ['#ff6b6b','#ffd93d','#6bcb77','#4d96ff','#c06bff','#ff9f43','#00d2d3','#ff6bff','#ff8a5c','#a29bfe','#fd79a8','#fdcb6e'];
+    const count = opts.count || (80 + Math.floor(Math.random() * 60));
     const colors = [];
-    // Pick 2-3 dominant colors for this burst
-    const domCount = 2 + Math.floor(Math.random() * 2);
-    for (let i = 0; i < domCount; i++) {
-      colors.push(palette[Math.floor(Math.random() * palette.length)]);
-    }
+    for (let i = 0; i < 2 + Math.floor(Math.random() * 2); i++) colors.push(palette[Math.floor(Math.random() * palette.length)]);
     for (let i = 0; i < count; i++) {
-      const color = colors[Math.floor(Math.random() * colors.length)];
-      this.particles.push(new Particle(x, y, color, {
-        speed: 3, speedVar: 7,
-        size: 1.5 + Math.random() * 3.5,
-        gravity: 0.05,
+      this.particles.push(new Particle(x, y, colors[Math.floor(Math.random() * colors.length)], {
+        speed: 3, speedVar: 7, size: 1.5 + Math.random() * 3.5, gravity: 0.05,
         fade: 0.006 + Math.random() * 0.018,
         trail: Math.random() > 0.5 ? 3 + Math.floor(Math.random() * 4) : 0,
       }));
     }
-    // Inner bright core particles
     for (let i = 0; i < 20; i++) {
-      const color = '#ffffff';
-      this.particles.push(new Particle(x, y, color, {
-        speed: 0.5, speedVar: 2,
-        size: 0.8 + Math.random() * 1.5,
-        gravity: 0.03,
-        fade: 0.03 + Math.random() * 0.04,
-        trail: 0,
+      this.particles.push(new Particle(x, y, '#ffffff', {
+        speed: 0.5, speedVar: 2, size: 0.8 + Math.random() * 1.5, gravity: 0.03,
+        fade: 0.03 + Math.random() * 0.04, trail: 0,
       }));
     }
   }
-
-  update() {
-    this.particles = this.particles.filter(p => !p.isDead());
-    this.particles.forEach(p => p.update());
-  }
-
-  draw(ctx) {
-    this.particles.forEach(p => p.draw(ctx));
-  }
-
+  update() { this.particles = this.particles.filter(p => !p.isDead()); this.particles.forEach(p => p.update()); }
+  draw(ctx) { this.particles.forEach(p => p.draw(ctx)); }
   isDead() { return this.particles.length === 0; }
 }
 
-// ---- Fireworks Manager ----
 const fireworks = [];
+function spawnFirework(x, y) { fireworks.push(new Firework(x, y, { count: 100 + Math.floor(Math.random() * 80) })); }
 
-function spawnFirework(x, y) {
-  fireworks.push(new Firework(x, y, { count: 100 + Math.floor(Math.random() * 80) }));
+// ============================================================
+// METEOR SHOWER — Canvas Particles
+// ============================================================
+const meteors = [];
+class CanvasMeteor {
+  constructor(type) {
+    this.type = type || (Math.random() > 0.5 ? 'fast' : 'slow');
+    this.x = Math.random() * W * 1.1;
+    this.y = -20 + Math.random() * H * 0.25;
+    if (this.type === 'fast') {
+      const angle = Math.PI * 0.28 + Math.random() * 0.15;
+      const speed = 9 + Math.random() * 12;
+      this.vx = Math.cos(angle) * speed; this.vy = Math.sin(angle) * speed;
+      this.alpha = 0.9; this.size = 2 + Math.random() * 3;
+      this.maxTrail = 20 + Math.floor(Math.random() * 15);
+      this.maxLife = 60 + Math.random() * 40;
+      this.hue = 210 + Math.random() * 40;
+    } else {
+      const angle = Math.PI * 0.22 + Math.random() * 0.2;
+      const speed = 4 + Math.random() * 6;
+      this.vx = Math.cos(angle) * speed; this.vy = Math.sin(angle) * speed;
+      this.alpha = 0.85; this.size = 2.5 + Math.random() * 4;
+      this.maxTrail = 12 + Math.floor(Math.random() * 10);
+      this.maxLife = 90 + Math.random() * 50;
+      this.hue = 250 + Math.random() * 60;
+    }
+    this.trail = []; this.life = 0;
+    this.color = `hsla(${this.hue}, 70%, 85%, `;
+    this.headColor = `hsla(${this.hue}, 15%, 95%, `;
+  }
+  update() {
+    this.life++;
+    this.trail.push({ x: this.x, y: this.y });
+    if (this.trail.length > this.maxTrail) this.trail.shift();
+    this.x += this.vx; this.y += this.vy;
+    if (this.life > this.maxLife * 0.65) this.alpha = Math.max(0, this.alpha - 0.025);
+  }
+  draw(ctx) {
+    if (this.alpha <= 0 || this.trail.length < 2) return;
+    for (let i = 0; i < this.trail.length - 1; i++) {
+      const t = this.trail[i], ratio = i / this.trail.length;
+      ctx.save(); ctx.globalAlpha = this.alpha * ratio * 0.65;
+      ctx.strokeStyle = this.color + (ratio * 0.9) + ')';
+      ctx.lineWidth = this.size * (0.3 + ratio * 0.7); ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(t.x, t.y);
+      const next = this.trail[i + 1]; ctx.lineTo(next.x, next.y);
+      ctx.stroke(); ctx.restore();
+    }
+    ctx.save(); ctx.globalAlpha = this.alpha;
+    const grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size * 10);
+    grad.addColorStop(0, this.headColor + '1)');
+    grad.addColorStop(0.15, this.headColor + '0.7)');
+    grad.addColorStop(0.5, this.headColor + '0.15)');
+    grad.addColorStop(1, this.headColor + '0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath(); ctx.arc(this.x, this.y, this.size * 10, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.beginPath(); ctx.arc(this.x, this.y, this.size * 0.5, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+  }
+  isDead() { return this.alpha <= 0 || this.x > W + 150 || this.y > H + 150 || this.x < -150; }
 }
 
+function spawnMeteor(type) { meteors.push(new CanvasMeteor(type)); }
+
+// ============================================================
+// ANIMATION LOOP
+// ============================================================
 function animate() {
   requestAnimationFrame(animate);
-
-  // Semi-transparent clear for trails
   ctx.fillStyle = 'rgba(5, 5, 16, 0.25)';
   ctx.fillRect(0, 0, W, H);
-
-  // Update & draw meteors
   for (let i = meteors.length - 1; i >= 0; i--) {
-    meteors[i].update();
-    meteors[i].draw(ctx);
+    meteors[i].update(); meteors[i].draw(ctx);
     if (meteors[i].isDead()) meteors.splice(i, 1);
   }
-
-  // Update & draw fireworks
   for (let i = fireworks.length - 1; i >= 0; i--) {
-    fireworks[i].update();
-    fireworks[i].draw(ctx);
+    fireworks[i].update(); fireworks[i].draw(ctx);
     if (fireworks[i].isDead()) fireworks.splice(i, 1);
   }
 }
-
-// ---- Click / Touch handler ----
-function handleInteraction(e) {
-  e.preventDefault();
-  let x, y;
-  if (e.touches) {
-    x = e.touches[0].clientX;
-    y = e.touches[0].clientY;
-  } else {
-    x = e.clientX;
-    y = e.clientY;
-  }
-  // Spawn 1-3 fireworks at the click point
-  const count = 1 + Math.floor(Math.random() * 3);
-  for (let i = 0; i < count; i++) {
-    const ox = x + (Math.random() - 0.5) * 60;
-    const oy = y + (Math.random() - 0.5) * 60;
-    spawnFirework(ox, oy);
-  }
-}
-
-document.addEventListener('click', handleInteraction);
-document.addEventListener('touchstart', handleInteraction, { passive: false });
-
-// Start animation
 animate();
 
 // ============================================================
-// AUTO FIREWORKS ON LOAD
+// CLICK FIREWORKS
 // ============================================================
-function autoFireworks() {
-  const delay = (ms) => new Promise(r => setTimeout(r, ms));
-
-  async function launch() {
-    await delay(600);
-    // Center burst
-    spawnFirework(W * 0.5, H * 0.35);
-    await delay(400);
-    spawnFirework(W * 0.3, H * 0.25);
-    await delay(300);
-    spawnFirework(W * 0.7, H * 0.3);
-    await delay(500);
-    spawnFirework(W * 0.45, H * 0.4);
-    await delay(350);
-    spawnFirework(W * 0.55, H * 0.2);
+function handleInteraction(e) {
+  e.preventDefault();
+  let x, y;
+  if (e.touches) { x = e.touches[0].clientX; y = e.touches[0].clientY; }
+  else { x = e.clientX; y = e.clientY; }
+  const count = 1 + Math.floor(Math.random() * 3);
+  for (let i = 0; i < count; i++) {
+    spawnFirework(x + (Math.random() - 0.5) * 60, y + (Math.random() - 0.5) * 60);
   }
-  launch();
 }
-autoFireworks();
+document.addEventListener('click', handleInteraction);
+document.addEventListener('touchstart', handleInteraction, { passive: false });
 
 // ============================================================
-// FALLING ELEMENTS (Stars, Hearts, Emojis)
+// AUTO FIREWORKS
+// ============================================================
+setTimeout(() => spawnFirework(W * 0.5, H * 0.35), 600);
+setTimeout(() => spawnFirework(W * 0.3, H * 0.25), 1000);
+setTimeout(() => spawnFirework(W * 0.7, H * 0.3), 1300);
+setTimeout(() => spawnFirework(W * 0.45, H * 0.4), 1800);
+setTimeout(() => spawnFirework(W * 0.55, H * 0.2), 2150);
+
+// ============================================================
+// METEOR SPAWNING
+// ============================================================
+for (let i = 0; i < 6; i++) setTimeout(() => spawnMeteor(), 300 + i * 350);
+(function scheduleMeteors() {
+  setTimeout(() => {
+    const burst = Math.random() > 0.8 ? 2 + Math.floor(Math.random() * 3) : 1;
+    for (let i = 0; i < burst; i++) setTimeout(() => spawnMeteor(), i * 120);
+    scheduleMeteors();
+  }, 1000 + Math.random() * 2500);
+})();
+(function scheduleShowers() {
+  setTimeout(() => {
+    const count = 5 + Math.floor(Math.random() * 6);
+    for (let i = 0; i < count; i++) setTimeout(() => spawnMeteor(i % 2 === 0 ? 'fast' : 'slow'), i * 80 + Math.random() * 60);
+    scheduleShowers();
+  }, 12000 + Math.random() * 8000);
+})();
+
+// ============================================================
+// FALLING ELEMENTS
 // ============================================================
 const fallingLayer = document.getElementById('fallingLayer');
-const fallingEmojis = [
-  '⭐', '✨', '🌟', '💫', '🌙',
-  '❤️', '💕', '💖', '💗', '💝',
-  '{ }', '</>', ';', '()', '//',
-  '✦', '✧', '♡', '◆', '◇',
-  '🪐', '🚀', '💻', '🎂', '🎉'
-];
-
+const fallingEmojis = ['⭐','✨','🌟','💫','🌙','❤️','💕','💖','💗','💝','{ }','</>',';','()','//','✦','✧','♡','◆','◇','🪐','🚀','💻','🎂','🎉'];
 function createFallingElement() {
   const el = document.createElement('span');
   el.className = 'falling-item';
@@ -775,68 +647,33 @@ function createFallingElement() {
   el.style.animationDelay = Math.random() * 5 + 's';
   el.style.opacity = (0.2 + Math.random() * 0.5);
   fallingLayer.appendChild(el);
-
-  // Remove after animation ends
-  const duration = parseFloat(el.style.animationDuration) + parseFloat(el.style.animationDelay);
-  setTimeout(() => {
-    if (el.parentNode) el.parentNode.removeChild(el);
-  }, duration * 1000 + 1000);
+  const dur = parseFloat(el.style.animationDuration) + parseFloat(el.style.animationDelay);
+  setTimeout(() => { if (el.parentNode) el.parentNode.removeChild(el); }, dur * 1000 + 1000);
 }
-
-// Spawn initial batch
-const initialCount = 30;
-for (let i = 0; i < initialCount; i++) {
-  setTimeout(() => createFallingElement(), i * 200);
-}
-// Keep spawning
-setInterval(() => {
-  if (fallingLayer.children.length < 40) {
-    createFallingElement();
-  }
-}, 1500);
+for (let i = 0; i < 30; i++) setTimeout(() => createFallingElement(), i * 200);
+setInterval(() => { if (fallingLayer.children.length < 40) createFallingElement(); }, 1500);
 
 // ============================================================
-// BG STARFIELD (Subtle twinkling dots)
+// STARS
 // ============================================================
 const starsContainer = document.createElement('div');
 starsContainer.className = 'stars';
 document.body.appendChild(starsContainer);
-
-function initStars() {
-  starsContainer.innerHTML = '';
+(function initStars() {
   const count = Math.floor((window.innerWidth * window.innerHeight) / 3000);
   for (let i = 0; i < count; i++) {
     const star = document.createElement('div');
     const size = 0.5 + Math.random() * 2;
-    star.style.cssText = `
-      position: absolute;
-      width: ${size}px; height: ${size}px;
-      background: white;
-      border-radius: 50%;
-      left: ${Math.random() * 100}%;
-      top: ${Math.random() * 100}%;
-      opacity: ${0.2 + Math.random() * 0.6};
-      animation: twinkle ${2 + Math.random() * 5}s ease-in-out infinite;
-      animation-delay: ${Math.random() * 5}s;
-    `;
+    star.style.cssText = `position:absolute;width:${size}px;height:${size}px;background:white;border-radius:50%;left:${Math.random()*100}%;top:${Math.random()*100}%;opacity:${0.2+Math.random()*0.6};animation:twinkle ${2+Math.random()*5}s ease-in-out infinite;animation-delay:${Math.random()*5}s`;
     starsContainer.appendChild(star);
   }
-}
-
-// Add twinkle keyframes
+})();
 const twinkleStyle = document.createElement('style');
-twinkleStyle.textContent = `
-  @keyframes twinkle {
-    0%, 100% { opacity: 0.2; }
-    50% { opacity: 0.8; }
-  }
-`;
+twinkleStyle.textContent = '@keyframes twinkle{0%,100%{opacity:0.2}50%{opacity:0.8}}';
 document.head.appendChild(twinkleStyle);
 
-initStars();
-
 // ============================================================
-// TYPEWRITER EFFECT
+// TYPEWRITER
 // ============================================================
 const typewriterEl = document.getElementById('typewriter');
 const phrases = [
@@ -846,48 +683,25 @@ const phrases = [
   '下一万天，我选择用诗意去覆盖逻辑',
   '愿你看到这页时，心里也落下一场花雨',
 ];
-
-let phraseIndex = 0;
-let charIndex = 0;
-let isDeleting = false;
-let typeSpeed = 80;
-
-function typeLoop() {
-  const current = phrases[phraseIndex];
-
+let phraseIdx = 0, charIdx = 0, isDeleting = false;
+setTimeout(function typeLoop() {
+  const cur = phrases[phraseIdx];
   if (!isDeleting) {
-    // Typing
-    typewriterEl.textContent = current.substring(0, charIndex);
-    charIndex++;
-    if (charIndex > current.length) {
-      // Finished typing — pause then delete
-      isDeleting = true;
-      typeSpeed = 2000; // Pause at end
-    } else {
-      typeSpeed = 60 + Math.random() * 60;
-    }
+    typewriterEl.textContent = cur.substring(0, charIdx); charIdx++;
+    if (charIdx > cur.length) { isDeleting = true; setTimeout(typeLoop, 2000); return; }
+    setTimeout(typeLoop, 60 + Math.random() * 60);
   } else {
-    // Deleting
-    typewriterEl.textContent = current.substring(0, charIndex);
-    charIndex--;
-    if (charIndex < 0) {
-      // Finished deleting — move to next phrase
-      isDeleting = false;
-      charIndex = 0;
-      phraseIndex = (phraseIndex + 1) % phrases.length;
-      typeSpeed = 300;
-    } else {
-      typeSpeed = 30 + Math.random() * 20;
-    }
+    typewriterEl.textContent = cur.substring(0, charIdx); charIdx--;
+    if (charIdx < 0) { isDeleting = false; charIdx = 0; phraseIdx = (phraseIdx + 1) % phrases.length; setTimeout(typeLoop, 300); return; }
+    setTimeout(typeLoop, 30 + Math.random() * 20);
   }
+}, 1500);
 
-  setTimeout(typeLoop, typeSpeed);
-}
-
-// Start typewriter after a slight delay
-setTimeout(typeLoop, 1500);
-
-// Slideshow typewriter — starts after 3s, simpler cycle
+// ============================================================
+// 3-SECOND TRANSITION
+// ============================================================
+const mainEl = document.getElementById('mainContent');
+const slideshowStage = document.getElementById('slideshowStage');
 const slideshowTwEl = document.getElementById('slideshowTypewriter');
 const slideshowPhrases = [
   '第10000天，我终于学会了和世界温柔地相处',
@@ -896,368 +710,136 @@ const slideshowPhrases = [
   '下一万天，我选择用诗意去覆盖逻辑',
   '愿你看到这页时，心里也落下一场花雨',
 ];
-let sTwIdx = 0;
-let sTwChar = 0;
-let sTwDeleting = false;
-let sTwActive = false;
+let sTwI = 0, sTwC = 0, sTwDel = false, sTwActive = false;
 
 function slideshowTypeLoop() {
   if (!sTwActive) return;
-  const current = slideshowPhrases[sTwIdx];
-  if (!sTwDeleting) {
-    slideshowTwEl.innerHTML = current.substring(0, sTwChar) + '<span class="cursor"></span>';
-    sTwChar++;
-    if (sTwChar > current.length) {
-      sTwDeleting = true;
-      setTimeout(slideshowTypeLoop, 2500);
-      return;
-    }
+  const cur = slideshowPhrases[sTwI];
+  if (!sTwDel) {
+    slideshowTwEl.innerHTML = cur.substring(0, sTwC) + '<span class="cursor"></span>'; sTwC++;
+    if (sTwC > cur.length) { sTwDel = true; setTimeout(slideshowTypeLoop, 2500); return; }
     setTimeout(slideshowTypeLoop, 55 + Math.random() * 55);
   } else {
-    slideshowTwEl.innerHTML = current.substring(0, sTwChar) + '<span class="cursor"></span>';
-    sTwChar--;
-    if (sTwChar < 0) {
-      sTwDeleting = false;
-      sTwChar = 0;
-      sTwIdx = (sTwIdx + 1) % slideshowPhrases.length;
-      setTimeout(slideshowTypeLoop, 400);
-      return;
-    }
+    slideshowTwEl.innerHTML = cur.substring(0, sTwC) + '<span class="cursor"></span>'; sTwC--;
+    if (sTwC < 0) { sTwDel = false; sTwC = 0; sTwI = (sTwI + 1) % slideshowPhrases.length; setTimeout(slideshowTypeLoop, 400); return; }
     setTimeout(slideshowTypeLoop, 25 + Math.random() * 20);
   }
 }
 
-// ============================================================
-// 3-SECOND TRANSITION: number shrinks to top-right, slideshow appears
-// ============================================================
-(function initTransition() {
-  const numberWrap = document.querySelector('.number-wrap');
-  const subtitle = document.querySelector('.subtitle');
-  const typewriterWrap = document.querySelector('.typewriter-wrap');
-  const tags = document.querySelector('.tags');
-  const slideshowStage = document.getElementById('slideshowStage');
-  const hint = document.querySelector('.hint');
-
-  setTimeout(() => {
-    // Shrink number to top-right
-    numberWrap.classList.add('shrunk');
-    // Hide subtitle, typewriter, tags
-    subtitle.classList.add('hidden');
-    typewriterWrap.classList.add('hidden');
-    tags.classList.add('hidden');
-    // Show slideshow stage
-    slideshowStage.classList.add('active');
-    // Start slideshow typewriter
-    sTwActive = true;
-    slideshowTypeLoop();
-    // Update hint
-    hint.textContent = '✦ 点击任意位置 · 燃放烟花 ✦';
-  }, 3000);
-})();
+setTimeout(() => {
+  mainEl.classList.add('shrunk');
+  slideshowStage.classList.add('active');
+  sTwActive = true; slideshowTypeLoop();
+}, 3000);
 
 // ============================================================
-// PREVENT DOUBLE-TAP ZOOM (Mobile)
+// MONOLOGUE
 // ============================================================
-let lastTouchEnd = 0;
-document.addEventListener('touchend', (e) => {
-  const now = Date.now();
-  if (now - lastTouchEnd <= 300) {
-    e.preventDefault();
-  }
-  lastTouchEnd = now;
-}, false);
-
-// ============================================================
-// LOG
-// ============================================================
-console.log('%c🪐 10000 Days %c· %c1999.04.13 → 2026.08.29',
-  'font-size:20px;color:#ff6bff;',
-  '',
-  'color:#aaa;');
-console.log('%cHello, World! × 10000 🚀', 'color:#4d96ff;');
-
-// ============================================================
-// MANIFEST LOADER — Images + Music
-// ============================================================
-let manifestData = { images: [], music: [] };
-
-async function loadManifest() {
-  try {
-    const resp = await fetch('manifest.json');
-    if (resp.ok) manifestData = await resp.json();
-  } catch (e) {
-    manifestData = { images: [], music: [] };
-  }
-  initBgCarousel(manifestData.images || []);
-  initMusicPlayer(manifestData.music || []);
-}
-
-// ============================================================
-// SLIDESHOW — Direct load from manifest, no probing
-// ============================================================
-function initBgCarousel(imageList) {
-  const stage = document.getElementById('slideshowStage');
-  const bgContainer = document.getElementById('bgCarousel');
-
-  if (imageList.length === 0) return;
-
-  // Directly use manifest URLs — encode Chinese filenames
-  const images = imageList.map(f => {
-    const path = f.startsWith('images/') ? f : `images/${f}`;
-    // Split path and encode filename part for non-ASCII chars
-    const parts = path.split('/');
-    parts[parts.length - 1] = encodeURI(parts[parts.length - 1]);
-    return parts.join('/');
-  });
-
-  let current = 0;
-
-  // Create slides directly — browser loads them in parallel
-  images.forEach((src, i) => {
-    const slide = document.createElement('div');
-    slide.className = 'slide-img';
-    if (i === 0) slide.classList.add('active');
-    // Use CSS background-image so browser loads lazily
-    slide.style.backgroundImage = `url(${src})`;
-    stage.insertBefore(slide, stage.firstChild);
-
-    const bgSlide = document.createElement('div');
-    bgSlide.className = 'bg-slide';
-    if (i === 0) bgSlide.classList.add('active');
-    bgSlide.style.backgroundImage = `url(${src})`;
-    bgContainer.appendChild(bgSlide);
-  });
-
-  const slides = stage.querySelectorAll('.slide-img');
-  const bgSlides = bgContainer.querySelectorAll('.bg-slide');
-
-  function nextSlide() {
-    slides[current].classList.remove('active');
-    bgSlides[current].classList.remove('active');
-    bgSlides[current].classList.add('exit');
-    current = (current + 1) % images.length;
-    slides[current].classList.add('active');
-    bgSlides[current].classList.remove('exit');
-    bgSlides[current].classList.add('active');
-  }
-
-  if (images.length > 1) setInterval(nextSlide, 5000);
-}
-
-// ============================================================
-// MUSIC PLAYER — Icon-only button
-// ============================================================
-function initMusicPlayer(musicList) {
-  if (!musicList || musicList.length === 0) return;
-
-  const btn = document.getElementById('musicBtn');
-  if (!btn) return;
-
-  let currentTrack = 0;
-  let isPlaying = false;
-  const audio = new Audio();
-  audio.volume = 0.5;
-  audio.preload = 'none'; // Don't preload — save bandwidth
-  const playlist = musicList.map(f => f.startsWith('music/') ? f : `music/${f}`);
-
-  function loadTrack(index) {
-    audio.src = playlist[index];
-    // Don't call audio.load() — let browser fetch on play()
-  }
-
-  function play() {
-    audio.play().then(() => {
-      isPlaying = true;
-      btn.classList.add('playing');
-    }).catch(() => {});
-  }
-
-  function pause() {
-    audio.pause(); isPlaying = false;
-    btn.classList.remove('playing');
-  }
-
-  btn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    isPlaying ? pause() : play();
-  });
-
-  audio.addEventListener('ended', () => {
-    currentTrack = (currentTrack + 1) % playlist.length;
-    loadTrack(currentTrack); play();
-  });
-
-  audio.addEventListener('error', () => {
-    setTimeout(() => { currentTrack = (currentTrack + 1) % playlist.length; loadTrack(currentTrack); play(); }, 2000);
-  });
-
-  loadTrack(0);
-
-  // Auto-play on first user interaction
-  let started = false;
-  function tryStart() {
-    if (started) return;
-    audio.play().then(() => { started = true; isPlaying = true; btn.classList.add('playing'); }).catch(() => {});
-  }
-  document.addEventListener('click', tryStart);
-  document.addEventListener('touchstart', tryStart);
-}
-
-// Kick off
-loadManifest();
-
-// ============================================================
-// MONOLOGUE — Types once in bottom-right and stays
-// ============================================================
-(function initMonologue() {
+(function() {
   const monoEl = document.getElementById('monologue');
   const textEl = document.getElementById('monoText');
   const fullText = '一万天。换算成小时是二十四万，换算成分钟是一千四百四十万。可我不想去算那些数字了。我只记得，第一个一万天里，我哭过、笑过、爱错过、写错过代码，也等对过日出。作为ENFP，我的世界很大，大到装得下宇宙；作为程序员，我的世界又很小，小到一行诗就能填满。今天是中间的节点，不上不下，不慌不忙。往后的一万天，我想把每个if都写成温柔的条件，把每个for都用来循环美好的人和事，把最后那个return，留给安静的自己。';
-
   let i = 0;
-  // Start after a delay to let the main typewriter start first
   setTimeout(() => {
     monoEl.classList.add('visible');
     function typeChar() {
       if (i < fullText.length) {
-        textEl.textContent = fullText.slice(0, i + 1);
-        i++;
-        const delay = 50 + Math.random() * 60;
-        setTimeout(typeChar, delay);
-      } else {
-        monoEl.classList.add('done');
-      }
+        textEl.textContent = fullText.slice(0, i + 1); i++;
+        setTimeout(typeChar, 50 + Math.random() * 60);
+      } else { monoEl.classList.add('done'); }
     }
     typeChar();
   }, 3000);
 })();
 
 // ============================================================
-// METEOR SHOWER — Enhanced Canvas Particle Meteors
+// MANIFEST LOADER + SLIDESHOW
 // ============================================================
-const meteors = [];
-
-class CanvasMeteor {
-  constructor(type) {
-    this.type = type || (Math.random() > 0.5 ? 'fast' : 'slow');
-    // Start from top area
-    this.x = Math.random() * W * 1.1;
-    this.y = -20 + Math.random() * H * 0.25;
-
-    if (this.type === 'fast') {
-      // Fast, long trail, bright
-      const angle = Math.PI * 0.28 + Math.random() * 0.15; // 50-77 deg (down-right)
-      const speed = 9 + Math.random() * 12;
-      this.vx = Math.cos(angle) * speed;
-      this.vy = Math.sin(angle) * speed;
-      this.alpha = 0.9;
-      this.size = 2 + Math.random() * 3;
-      this.maxTrail = 20 + Math.floor(Math.random() * 15);
-      this.maxLife = 60 + Math.random() * 40;
-      this.hue = 210 + Math.random() * 40; // blue-white
-    } else {
-      // Slow, bright head, shorter trail
-      const angle = Math.PI * 0.22 + Math.random() * 0.2; // 40-75 deg
-      const speed = 4 + Math.random() * 6;
-      this.vx = Math.cos(angle) * speed;
-      this.vy = Math.sin(angle) * speed;
-      this.alpha = 0.85;
-      this.size = 2.5 + Math.random() * 4;
-      this.maxTrail = 12 + Math.floor(Math.random() * 10);
-      this.maxLife = 90 + Math.random() * 50;
-      this.hue = 250 + Math.random() * 60; // purple-white
+async function loadManifest() {
+  let images = [];
+  let music = [];
+  try {
+    const resp = await fetch('manifest.json');
+    if (resp.ok) {
+      const data = await resp.json();
+      images = data.images || [];
+      music = data.music || [];
     }
+  } catch (e) {}
 
-    this.trail = [];
-    this.life = 0;
-    this.color = `hsla(${this.hue}, 70%, 85%, `;
-    this.headColor = `hsla(${this.hue}, 15%, 95%, `;
+  // Init slideshow with images
+  if (images.length > 0) {
+    const imgUrls = images.map(f => {
+      const path = f.startsWith('images/') ? f : `images/${f}`;
+      const parts = path.split('/');
+      parts[parts.length - 1] = encodeURI(parts[parts.length - 1]);
+      return parts.join('/');
+    });
+
+    let current = 0;
+    imgUrls.forEach((src, i) => {
+      const slide = document.createElement('div');
+      slide.className = 'slide-img';
+      if (i === 0) slide.classList.add('active');
+      slide.style.backgroundImage = `url(${src})`;
+      slideshowStage.insertBefore(slide, slideshowStage.firstChild);
+
+      const bgSlide = document.createElement('div');
+      bgSlide.className = 'bg-slide';
+      bgSlide.style.cssText = `position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 2.5s ease-in-out;`;
+      if (i === 0) { bgSlide.classList.add('active'); bgSlide.style.opacity = '0.35'; }
+      bgSlide.style.backgroundImage = `url(${src})`;
+      document.getElementById('bgCarousel').appendChild(bgSlide);
+    });
+
+    const slides = slideshowStage.querySelectorAll('.slide-img');
+    const bgSlides = document.getElementById('bgCarousel').querySelectorAll('.bg-slide');
+    setInterval(() => {
+      slides[current].classList.remove('active');
+      bgSlides[current].style.opacity = '0';
+      current = (current + 1) % imgUrls.length;
+      slides[current].classList.add('active');
+      bgSlides[current].style.opacity = '0.35';
+    }, 5000);
   }
 
-  update() {
-    this.life++;
-    this.trail.push({ x: this.x, y: this.y });
-    if (this.trail.length > this.maxTrail) this.trail.shift();
-    this.x += this.vx;
-    this.y += this.vy;
-    if (this.life > this.maxLife * 0.65) {
-      this.alpha = Math.max(0, this.alpha - 0.025);
-    }
+  // Init music player
+  if (music.length > 0) {
+    const btn = document.getElementById('musicBtn');
+    const playlist = music.map(f => f.startsWith('music/') ? f : `music/${f}`);
+    let cur = 0, playing = false;
+    const audio = new Audio();
+    audio.volume = 0.5;
+    audio.preload = 'none';
+
+    function loadTrack(i) { audio.src = playlist[i]; }
+    function play() { audio.play().then(() => { playing = true; btn.classList.add('playing'); }).catch(() => {}); }
+    function pause() { audio.pause(); playing = false; btn.classList.remove('playing'); }
+
+    btn.addEventListener('click', (e) => { e.stopPropagation(); playing ? pause() : play(); });
+    audio.addEventListener('ended', () => { cur = (cur + 1) % playlist.length; loadTrack(cur); play(); });
+    audio.addEventListener('error', () => { setTimeout(() => { cur = (cur + 1) % playlist.length; loadTrack(cur); play(); }, 2000); });
+    loadTrack(0);
+
+    let started = false;
+    function tryStart() { if (started) return; audio.play().then(() => { started = true; playing = true; btn.classList.add('playing'); }).catch(() => {}); }
+    document.addEventListener('click', tryStart);
+    document.addEventListener('touchstart', tryStart);
   }
-
-  draw(ctx) {
-    if (this.alpha <= 0 || this.trail.length < 2) return;
-    // Draw trail as gradient polyline
-    for (let i = 0; i < this.trail.length - 1; i++) {
-      const t = this.trail[i];
-      const ratio = i / this.trail.length;
-      ctx.save();
-      ctx.globalAlpha = this.alpha * ratio * 0.65;
-      ctx.strokeStyle = this.color + (ratio * 0.9) + ')';
-      ctx.lineWidth = this.size * (0.3 + ratio * 0.7);
-      ctx.lineCap = 'round';
-      ctx.beginPath();
-      ctx.moveTo(t.x, t.y);
-      const next = this.trail[i + 1];
-      ctx.lineTo(next.x, next.y);
-      ctx.stroke();
-      ctx.restore();
-    }
-    // Head glow
-    ctx.save();
-    ctx.globalAlpha = this.alpha;
-    const grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size * 10);
-    grad.addColorStop(0, this.headColor + '1)');
-    grad.addColorStop(0.15, this.headColor + '0.7)');
-    grad.addColorStop(0.5, this.headColor + '0.15)');
-    grad.addColorStop(1, this.headColor + '0)');
-    ctx.fillStyle = grad;
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.size * 10, 0, Math.PI * 2);
-    ctx.fill();
-    // Bright white core
-    ctx.fillStyle = '#fff';
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.size * 0.5, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-  }
-
-  isDead() { return this.alpha <= 0 || this.x > W + 150 || this.y > H + 150 || this.x < -150; }
 }
+loadManifest();
 
-function spawnCanvasMeteor(type) {
-  meteors.push(new CanvasMeteor(type));
-}
+// ============================================================
+// PREVENT DOUBLE-TAP ZOOM
+// ============================================================
+let lastTouchEnd = 0;
+document.addEventListener('touchend', (e) => {
+  if (Date.now() - lastTouchEnd <= 300) e.preventDefault();
+  lastTouchEnd = Date.now();
+}, false);
 
-// Initial burst
-for (let i = 0; i < 6; i++) {
-  setTimeout(() => spawnCanvasMeteor(), 300 + i * 350);
-}
-
-// Frequent meteors + periodic showers
-(function scheduleMeteors() {
-  const delay = 1000 + Math.random() * 2500;
-  setTimeout(() => {
-    const burst = Math.random() > 0.8 ? 2 + Math.floor(Math.random() * 3) : 1;
-    for (let i = 0; i < burst; i++) {
-      setTimeout(() => spawnCanvasMeteor(), i * 120);
-    }
-    scheduleMeteors();
-  }, delay);
-})();
-
-// Meteor shower bursts every 12-20 seconds
-(function scheduleShowers() {
-  const delay = 12000 + Math.random() * 8000;
-  setTimeout(() => {
-    const count = 5 + Math.floor(Math.random() * 6);
-    for (let i = 0; i < count; i++) {
-      setTimeout(() => spawnCanvasMeteor(i % 2 === 0 ? 'fast' : 'slow'), i * 80 + Math.random() * 60);
-    }
-    scheduleShowers();
-  }, delay);
-})();
+console.log('%c🪐 10000 Days %c· %c1999.04.13 → 2026.08.29', 'font-size:20px;color:#ff6bff;', '', 'color:#aaa;');
+console.log('%cHello, World! × 10000 🚀', 'color:#4d96ff;');
 </script>
 </body>
 </html>
