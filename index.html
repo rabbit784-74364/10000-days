@@ -990,73 +990,49 @@ async function loadManifest() {
 }
 
 // ============================================================
-// BACKGROUND IMAGE CAROUSEL → Slideshow Stage
+// SLIDESHOW — Direct load from manifest, no probing
 // ============================================================
 function initBgCarousel(imageList) {
   const stage = document.getElementById('slideshowStage');
-
-  // Also keep bg-carousel for ambient background
   const bgContainer = document.getElementById('bgCarousel');
-  const toLoad = [...imageList];
-  if (toLoad.length === 0) {
-    for (let i = 1; i <= 20; i++) {
-      toLoad.push(`images/img-${i}.jpg`, `images/img-${i}.png`, `images/photo-${i}.jpg`, `images/pic-${i}.jpg`);
-    }
+
+  if (imageList.length === 0) return;
+
+  // Directly use manifest URLs — no probing!
+  const images = imageList.map(f => f.startsWith('images/') ? f : `images/${f}`);
+
+  let current = 0;
+
+  // Create slides directly — browser loads them in parallel
+  images.forEach((src, i) => {
+    const slide = document.createElement('div');
+    slide.className = 'slide-img';
+    if (i === 0) slide.classList.add('active');
+    // Use CSS background-image so browser loads lazily
+    slide.style.backgroundImage = `url(${src})`;
+    stage.insertBefore(slide, stage.firstChild);
+
+    const bgSlide = document.createElement('div');
+    bgSlide.className = 'bg-slide';
+    if (i === 0) bgSlide.classList.add('active');
+    bgSlide.style.backgroundImage = `url(${src})`;
+    bgContainer.appendChild(bgSlide);
+  });
+
+  const slides = stage.querySelectorAll('.slide-img');
+  const bgSlides = bgContainer.querySelectorAll('.bg-slide');
+
+  function nextSlide() {
+    slides[current].classList.remove('active');
+    bgSlides[current].classList.remove('active');
+    bgSlides[current].classList.add('exit');
+    current = (current + 1) % images.length;
+    slides[current].classList.add('active');
+    bgSlides[current].classList.remove('exit');
+    bgSlides[current].classList.add('active');
   }
-  const validImages = [];
-  let idx = 0;
-  function testNext() {
-    if (idx >= toLoad.length) {
-      if (validImages.length > 0) startSlideshow(validImages);
-      return;
-    }
-    const src = toLoad[idx];
-    const url = src.startsWith('images/') ? src : `images/${src}`;
-    idx++;
-    const img = new Image();
-    img.onload = function() { validImages.push(url); testNext(); };
-    img.onerror = function() { testNext(); };
-    img.src = url;
-  }
-  testNext();
 
-  function startSlideshow(images) {
-    if (images.length === 0) return;
-    let current = 0;
-
-    // Populate slideshow stage
-    images.forEach((src, i) => {
-      const slide = document.createElement('div');
-      slide.className = 'slide-img';
-      slide.style.backgroundImage = `url(${src})`;
-      if (i === 0) slide.classList.add('active');
-      stage.insertBefore(slide, stage.firstChild); // Insert before typewriter overlay
-    });
-
-    // Also populate bg carousel for ambient
-    images.forEach((src, i) => {
-      const slide = document.createElement('div');
-      slide.className = 'bg-slide';
-      slide.style.backgroundImage = `url(${src})`;
-      if (i === 0) slide.classList.add('active');
-      bgContainer.appendChild(slide);
-    });
-
-    const slides = stage.querySelectorAll('.slide-img');
-    const bgSlides = bgContainer.querySelectorAll('.bg-slide');
-
-    function nextSlide() {
-      slides[current].classList.remove('active');
-      bgSlides[current].classList.remove('active');
-      bgSlides[current].classList.add('exit');
-      current = (current + 1) % images.length;
-      slides[current].classList.add('active');
-      bgSlides[current].classList.remove('exit');
-      bgSlides[current].classList.add('active');
-    }
-
-    if (images.length > 1) setInterval(nextSlide, 5000);
-  }
+  if (images.length > 1) setInterval(nextSlide, 5000);
 }
 
 // ============================================================
@@ -1072,11 +1048,12 @@ function initMusicPlayer(musicList) {
   let isPlaying = false;
   const audio = new Audio();
   audio.volume = 0.5;
+  audio.preload = 'none'; // Don't preload — save bandwidth
   const playlist = musicList.map(f => f.startsWith('music/') ? f : `music/${f}`);
 
   function loadTrack(index) {
     audio.src = playlist[index];
-    audio.load();
+    // Don't call audio.load() — let browser fetch on play()
   }
 
   function play() {
